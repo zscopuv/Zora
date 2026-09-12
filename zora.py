@@ -91,7 +91,7 @@ class Zora:
         sc("-q", "--quiet", action="store_true", help="Suppress non-essential output")
 
 
-        sc("--charset", default="letters", help="Character set to use: (zora ---charset-list)")
+        sc("--charset", default="@letters", help="Character set to use (see --charset-list)")
 
         self.args = self.parser.parse_args()
 
@@ -103,7 +103,7 @@ class Zora:
             self.parser.error("--seed requires --unsafe (seeding is insecure)")
 
         if self.args.charset_list:
-            self.parser.exit(0, ("\nAvaliable charsets to use:\n  @"+("\n  @".join(CHARSETS.keys())) + f"\n\n Use as:\n  zora --charset @digits            = For digits only charset\n  zora --charset @letters@digits    = For alphanumeric charset\n  zora --charset @hex\"XYZ\"          = For hexadecimal charset extended with letters X, Y and Z\n"))
+            self.parser.exit(0, ("\nAvailable charsets to use:\n  @"+("\n  @".join(CHARSETS.keys())) + f"\n\n Use as:\n  zora --charset @digits            = For digits only charset\n  zora --charset @letters@digits    = For alphanumeric charset\n  zora --charset @hex\"XYZ\"          = For hexadecimal charset extended with letters X, Y and Z\n"))
 
         if self.args.unsafe and not self.args.quiet:
             print(f"{Fore.RED}Program will output cryptographically insecure keys.\n")
