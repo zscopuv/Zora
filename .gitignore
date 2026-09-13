@@ -1,2 +1,5 @@
 /.venv-index
 /beta
+/dist
+/test-env
+/zora_cli.egg_info
