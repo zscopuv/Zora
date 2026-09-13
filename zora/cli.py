@@ -64,6 +64,7 @@ class Zora:
         self.start_timer()
         self.parse_args()
         self.build_charset()
+        self.validate_charset()
         self.generate_keys()
         self.output()
         self.show_timer()
@@ -110,6 +111,14 @@ class Zora:
                 value = value[1:]
 
         self.charset = "".join(dict.fromkeys(charset))
+
+    def validate_charset(self):
+        """Make sure the final charset is usable."""
+        if not self.charset:
+            self.parser.error("charset cannot be empty")
+
+        if len(self.charset) < 2:
+            self.parser.error("charset must contain at least 2 unique characters")
 
     def parse_args(self):
         """
