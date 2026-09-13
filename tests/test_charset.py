@@ -86,6 +86,27 @@ def test_build_mixed_preset_and_literals():
 
     assert zora.charset == "0123456789XYZ"
 
+def test_build_literal_at_character():
+    zora = make_zora("@@")
+
+    zora.build_charset()
+
+    assert zora.charset == "@"
+
+
+def test_build_escaped_at_adjacent_to_preset():
+    zora = make_zora("@@@digits")
+
+    zora.build_charset()
+
+    assert zora.charset == "@0123456789"
+
+
+def test_build_invalid_unescaped_preset_name():
+    zora = make_zora("@doesnotexist")
+
+    with pytest.raises(SystemExit):
+        zora.build_charset()
 
 def test_build_preset_and_literals_with_duplicates():
     zora = make_zora("@digits123")
@@ -151,7 +172,7 @@ def test_build_multiple_same_presets():
     assert zora.charset == "0123456789"
 
 
-def test_unknown_preset_raises_system_exit():
+def test_invalid_unescaped_preset_name():
     zora = make_zora("@doesnotexist")
 
     with pytest.raises(SystemExit):
