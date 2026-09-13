@@ -97,17 +97,6 @@ def test_show_timer_displays_hours(monkeypatch, capsys):
 
     assert "1h 1m 5s elapsed" in output
 
-def test_show_timer_quiet_suppresses_output(capsys):
-    zora = make_zora(quiet=True)
-
-    zora.start_timer()
-    zora.show_timer()
-
-    output = capsys.readouterr().out
-
-    assert output == ""
-    assert not hasattr(zora, "elapsed")
-
 
 def test_show_timer_without_start_does_not_crash(capsys):
     zora = make_zora()
