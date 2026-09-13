@@ -1,3 +1,6 @@
+import io
+import csv
+import json
 import math
 import time
 import string
@@ -6,9 +9,6 @@ import random, secrets
 from . import __version__
 from .update import check_for_update
 from colorama import Fore, init; init(autoreset=True);
-
-import csv
-import json
 import xml.etree.ElementTree as ET
 
 try:
@@ -240,7 +240,6 @@ class Zora:
             ) + "\n"
 
         elif output_format == "csv":
-            import io
 
             buffer = io.StringIO()
             writer = csv.writer(buffer)
@@ -260,6 +259,8 @@ class Zora:
             for key in self.lines:
                 element = ET.SubElement(keys, "key")
                 element.text = key
+
+            ET.indent(root, space="    ")
 
             data = ET.tostring(root, encoding="unicode") + "\n"
 
@@ -284,7 +285,7 @@ class Zora:
             with open(self.args.output, "w", encoding="utf-8", newline="") as f:
                 f.write(data)
         else:
-            print(data, end="")
+            print(f"{Fore.LIGHTYELLOW_EX}{data}", end="")
 
     def start_timer(self):
         """
