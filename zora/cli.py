@@ -135,6 +135,7 @@ class Zora:
         # ARGUMENTS
         #
         sc("--charset-list", action="store_true", help="Shows available charset lists")
+        sc("--version", action="version", version=f"%(prog)s {__version__}")
 
         sc("length", type=positive_int, help="Length of the key", nargs="?")
         sc("--seed", type=str, help="Seed for generation")
@@ -155,7 +156,7 @@ class Zora:
 
     def validate_args(self):
         """Validate parsed command-line arguments."""
-        if self.args.length is None and not self.args.charset_list:
+        if self.args.length is None and (not self.args.charset_list or self.args.version):
             self.parser.error("length is required")
 
         if self.args.seed is not None and not self.args.unsafe:
@@ -179,6 +180,7 @@ class Zora:
             )
 
             self.parser.exit(0, "\n".join(lines) + "\n")
+
         if self.args.unsafe and not self.args.quiet:
             print(f"{Fore.RED}Program will output cryptographically insecure keys.\n")
 
