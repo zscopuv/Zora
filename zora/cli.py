@@ -397,8 +397,6 @@ class Zora:
             else 0
         )
 
-        print(self.elapsed)
-
         generator = f"{Fore.RED}PRNG" if self.args.unsafe else f"{Fore.GREEN}CSPRNG"
 
         print(f"\n{Fore.CYAN}Zora Benchmark")
