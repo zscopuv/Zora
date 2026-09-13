@@ -29,19 +29,32 @@ output, entropy estimation, and an optional deterministic PRNG mode.
 - 🤫 **Quiet mode** for scripting
 - 📋 **Charset preset listing**
 
+## Installation
+
+### Requirements
+
+```bash
+pip install zora-cli
+````
+
+Run Zora:
+
+```bash
+zora 32
+```
 
 # Usage
 
 Basic usage:
 
 ```bash
-python zora.py LENGTH [OPTIONS]
+zora LENGTH [OPTIONS]
 ```
 
 For example:
 
 ```bash
-python zora.py 32
+zora 32
 ```
 
 Example output:
@@ -65,7 +78,7 @@ Generator: CSPRNG
 The length of the random portion of the generated key.
 
 ```bash
-python zora.py 32
+zora 32
 ```
 
 The value must be greater than `0`.
@@ -77,7 +90,7 @@ The value must be greater than `0`.
 Select the character set used to generate keys.
 
 ```bash
-python zora.py 32 --charset @digits
+zora 32 --charset @digits
 ```
 
 By default:
@@ -95,7 +108,7 @@ Zora supports both predefined charset presets and literal characters.
 Use `--charset-list` to display all available presets:
 
 ```bash
-python zora.py --charset-list
+zora --charset-list
 ```
 
 Currently available presets:
@@ -118,7 +131,7 @@ Currently available presets:
 Presets can be combined:
 
 ```bash
-python zora.py 32 --charset @letters@digits
+zora 32 --charset @letters@digits
 ```
 
 This creates an alphanumeric character set.
@@ -126,7 +139,7 @@ This creates an alphanumeric character set.
 Multiple presets can be combined:
 
 ```bash
-python zora.py 32 --charset @upper@lower@digits
+zora 32 --charset @upper@lower@digits
 ```
 
 Duplicate characters are automatically removed.
@@ -148,7 +161,7 @@ Literal characters can be included alongside presets.
 For example:
 
 ```bash
-python zora.py 32 --charset @hexXYZ
+zora 32 --charset @hexXYZ
 ```
 
 This means:
@@ -160,7 +173,7 @@ This means:
 Another example:
 
 ```bash
-python zora.py 32 --charset XYZ@hex
+zora 32 --charset XYZ@hex
 ```
 
 means:
@@ -178,7 +191,7 @@ This allows arbitrary character sets without needing to add a new preset.
 Display the available charset presets:
 
 ```bash
-python zora.py --charset-list
+zora --charset-list
 ```
 
 Example:
@@ -209,13 +222,13 @@ Use as:
 Use `-n` or `--count`:
 
 ```bash
-python zora.py 32 --count 10
+zora 32 --count 10
 ```
 
 or:
 
 ```bash
-python zora.py 32 -n 10
+zora 32 -n 10
 ```
 
 Zora generates each key independently.
@@ -230,7 +243,7 @@ cryptographically secure random generator.
 Add a prefix:
 
 ```bash
-python zora.py 32 --prefix "AUTH_"
+zora 32 --prefix "AUTH_"
 ```
 
 Example:
@@ -242,13 +255,13 @@ AUTH_GxKqTnJpYwRzLhBcVfQmNsXeUaPkTdWr
 Add a suffix:
 
 ```bash
-python zora.py 32 --suffix "_KEY"
+zora 32 --suffix "_KEY"
 ```
 
 Both can be used together:
 
 ```bash
-python zora.py 32 --prefix "AUTH_" --suffix "_KEY"
+zora 32 --prefix "AUTH_" --suffix "_KEY"
 ```
 
 > Prefixes and suffixes are not random and therefore do not contribute to
@@ -263,7 +276,7 @@ Use `--group` to insert a separator every N characters.
 For example:
 
 ```bash
-python zora.py 32 --group 4
+zora 32 --group 4
 ```
 
 Output:
@@ -281,7 +294,7 @@ The default separator is:
 Use `--sep` to change it:
 
 ```bash
-python zora.py 32 --group 4 --sep ":"
+zora 32 --group 4 --sep ":"
 ```
 
 Output:
@@ -300,7 +313,7 @@ entropy.
 Use `-o` or `--output` to write generated keys to a file:
 
 ```bash
-python zora.py 32 -n 10 --output keys.txt
+zora 32 -n 10 --output keys.txt
 ```
 
 The generated keys are written one per line.
@@ -323,7 +336,7 @@ This is the recommended mode when generating authentication tokens,
 API keys, secrets, or other security-sensitive random values.
 
 ```bash
-python zora.py 32
+zora 32
 ```
 
 The output will report:
@@ -339,7 +352,7 @@ Generator: CSPRNG
 Use:
 
 ```bash
-python zora.py 32 --unsafe
+zora 32 --unsafe
 ```
 
 to use Python's normal pseudo-random number generator instead of the
@@ -374,7 +387,7 @@ This is intentional.
 The following will fail:
 
 ```bash
-python zora.py 32 --seed example
+zora 32 --seed example
 ```
 
 because Zora's secure generator should not be made deterministic through
@@ -383,7 +396,7 @@ the normal CLI.
 Instead:
 
 ```bash
-python zora.py 32 --unsafe --seed example
+zora 32 --unsafe --seed example
 ```
 
 A seed can be useful for testing reproducibility.
@@ -391,7 +404,7 @@ A seed can be useful for testing reproducibility.
 For example:
 
 ```bash
-python zora.py 32 --unsafe --seed test
+zora 32 --unsafe --seed test
 ```
 
 will produce the same deterministic sequence when run with the same
@@ -407,7 +420,7 @@ rather than being reseeded for every key.
 Use `-q` or `--quiet` to suppress non-essential output:
 
 ```bash
-python zora.py 32 --quiet
+zora 32 --quiet
 ```
 
 This is useful when using Zora inside scripts or shell pipelines.
@@ -415,7 +428,7 @@ This is useful when using Zora inside scripts or shell pipelines.
 For example:
 
 ```bash
-python zora.py 32 --quiet > key.txt
+zora 32 --quiet > key.txt
 ```
 
 ---
@@ -447,13 +460,13 @@ entropy.
 For example:
 
 ```bash
-python zora.py 32 --prefix "AUTH_"
+zora 32 --prefix "AUTH_"
 ```
 
 has the same theoretical entropy as:
 
 ```bash
-python zora.py 32
+zora 32
 ```
 
 assuming the same charset and length.
@@ -496,103 +509,103 @@ PRNG
 ### Basic key
 
 ```bash
-python zora.py 32
+zora 32
 ```
 
 ### Digits only
 
 ```bash
-python zora.py 32 --charset @digits
+zora 32 --charset @digits
 ```
 
 ### Lowercase only
 
 ```bash
-python zora.py 32 --charset @lower
+zora 32 --charset @lower
 ```
 
 ### Uppercase only
 
 ```bash
-python zora.py 32 --charset @upper
+zora 32 --charset @upper
 ```
 
 ### Alphanumeric
 
 ```bash
-python zora.py 32 --charset @letters@digits
+zora 32 --charset @letters@digits
 ```
 
 ### Hexadecimal
 
 ```bash
-python zora.py 32 --charset @hex
+zora 32 --charset @hex
 ```
 
 ### Hexadecimal plus custom characters
 
 ```bash
-python zora.py 32 --charset @hexXYZ
+zora 32 --charset @hexXYZ
 ```
 
 ### Uppercase, lowercase and digits
 
 ```bash
-python zora.py 32 --charset @upper@lower@digits
+zora 32 --charset @upper@lower@digits
 ```
 
 ### Symbols
 
 ```bash
-python zora.py 32 --charset @special
+zora 32 --charset @special
 ```
 
 ### Group the output
 
 ```bash
-python zora.py 32 --group 4
+zora 32 --group 4
 ```
 
 ### Custom separator
 
 ```bash
-python zora.py 32 --group 4 --sep ":"
+zora 32 --group 4 --sep ":"
 ```
 
 ### Generate multiple keys
 
 ```bash
-python zora.py 32 -n 10
+zora 32 -n 10
 ```
 
 ### Save to a file
 
 ```bash
-python zora.py 32 -n 100 -o keys.txt
+zora 32 -n 100 -o keys.txt
 ```
 
 ### Prefix
 
 ```bash
-python zora.py 32 --prefix "AUTH_"
+zora 32 --prefix "AUTH_"
 ```
 
 ### Secure generation
 
 ```bash
-python zora.py 32
+zora 32
 ```
 
 ### Reproducible testing
 
 ```bash
-python zora.py 32 --unsafe --seed test
+zora 32 --unsafe --seed test
 ```
 
 ### Quiet output
 
 ```bash
-python zora.py 32 --quiet
+zora 32 --quiet
 ```
 
 ---
@@ -661,7 +674,7 @@ However, entropy alone does not prove that a generator is secure.
 For example:
 
 ```bash
-python zora.py 32 --unsafe
+zora 32 --unsafe
 ```
 
 can still report a high entropy value because the theoretical output
@@ -696,25 +709,8 @@ pip install -r requirements.txt
 Run:
 
 ```bash
-python zora.py 32
+zora 32
 ```
-
----
-
-# Project structure
-
-A minimal installation currently looks like:
-
-```text
-Zora/
-├── zora.py
-├── zora.jpg
-├── LICENSE
-├── README.md
-└── requirements.txt
-```
-
-Future versions may introduce a package structure and automated tests.
 
 ---
 
@@ -722,16 +718,16 @@ Future versions may introduce a package structure and automated tests.
 
 Possible future improvements include:
 
+* [x] More charset presets
+* [x] Improved documentation
+* [x] Installation through `pip`
+* [x] Packaging with `pyproject.toml`
 * [ ] Automated test suite
-* [ ] More charset presets
 * [ ] Better charset parsing errors
 * [ ] Configuration files
-* [ ] Packaging with `pyproject.toml`
-* [ ] Installation through `pip`
 * [ ] Shell completion
 * [ ] More output formats
 * [ ] Benchmarking mode
-* [ ] Improved documentation
 * [ ] Cross-platform terminal improvements
 * [ ] API/library usage
 * [ ] More extensive security testing
