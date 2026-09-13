@@ -4,3 +4,4 @@
 /zora_cli*
 /.vscode
 */__pycache__
+/.pytest_cache
