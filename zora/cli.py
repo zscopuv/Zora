@@ -207,8 +207,8 @@ class Zora:
         Prints out / Saves the keys (lines)
         """
         if self.args.output:
-            with open(self.args.output, "w") as f:
-                f.write("\n".join(self.lines))
+            with open(self.args.output, "w", encoding="utf-8") as f:
+                f.write("\n".join(self.lines) + "\n")
 
         else:
             print("\n".join(_ for _ in self.lines))
