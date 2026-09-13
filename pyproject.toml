@@ -13,7 +13,8 @@ authors = [
     { name = "zscopuv" }
 ]
 dependencies = [
-    "colorama==0.4.6"
+    "colorama==0.4.6",
+    "packaging>=24.0"
 ]
 
 [project.scripts]

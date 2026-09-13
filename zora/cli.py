@@ -3,6 +3,8 @@ import time
 import string
 import argparse
 import random, secrets
+from . import __version__
+from .update import check_for_update
 from colorama import Fore, init; init(autoreset=True);
 
 def positive_int(value):
@@ -34,7 +36,22 @@ class Zora:
         self.output()
         self.show_timer()
         self.show_entropy()
+        if not self.args.quiet:
+            self.check_update()
 
+    def check_update(self):
+        latest = check_for_update()
+
+        if latest:
+            print(
+                f"\n{Fore.WHITE}"
+                f"A new version of zora-cli is available: "
+                f"{Fore.RED}{__version__} {Fore.WHITE}→ {Fore.GREEN}{latest}"
+            )
+            print(
+                f"{Fore.WHITE}"
+                f"Run: {Fore.LIGHTYELLOW_EX}pip install --upgrade zora-cli\n"
+            )
 
     def build_charset(self):
         value = self.args.charset
@@ -91,7 +108,7 @@ class Zora:
         sc("-q", "--quiet", action="store_true", help="Suppress non-essential output")
 
 
-        sc("--charset", default="@letters", help="Character set to use (see --charset-list)")
+        sc("-x", "--charset", default="@letters", help="Character set to use (see --charset-list)")
 
         self.args = self.parser.parse_args()
 
