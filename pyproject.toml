@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zora-cli"
+version = "0.1.1"
+description = "Cryptographically secure generator of random keys with tons of options and customizations."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name = "zscopuv" }
+]
+dependencies = [
+    "colorama==0.4.6"
+]
+
+[project.scripts]
+zora = "zora.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["zora*"]
