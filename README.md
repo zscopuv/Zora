@@ -1,6 +1,6 @@
 # ![Logo](https://i.ibb.co/21JfnbBZ/zora.jpg)
 
-> **Early release (`v0.2`)**
+> **Early release (`v0.2.1`)**
 
 Zora is a command-line tool for generating random keys using Python's
 cryptographically secure `secrets` module by default.
@@ -120,7 +120,7 @@ zora --version
 Example:
 
 ```text
-zora 0.2.0
+zora 0.1.2
 ```
 
 ---
@@ -1031,7 +1031,7 @@ MAJOR.MINOR.PATCH
 For example:
 
 ```text
-v0.2.0
+v0.1.3
 ```
 
 The `0.x` versions indicate that the CLI and features may still change
