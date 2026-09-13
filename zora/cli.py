@@ -7,6 +7,15 @@ from . import __version__
 from .update import check_for_update
 from colorama import Fore, init; init(autoreset=True);
 
+import csv
+import json
+import xml.etree.ElementTree as ET
+
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
 def positive_int(value):
     value = int(value)
     if value <= 0:
@@ -143,6 +152,7 @@ class Zora:
         sc("--suffix", type=str, default="", help="Suffix the generated keys")
         sc("--group", type=positive_int, help="Add separator each X chars (use --sep [str] to set separator)")
         sc("--sep", type=str, default="-", help="Grouping separator string")
+        sc("--format", type=str, default="text", choices=["text", "json", "csv", "xml", "yml"], help="Set the output format")
 
         sc("-n", "--count", type=positive_int, default=1, help="Number of keys to generate")
         sc("-o", "--output", type=str, metavar="FILE", help="Write output to file")
@@ -213,14 +223,68 @@ class Zora:
 
     def output(self):
         """
-        Prints out / Saves the keys (lines)
+        Print or save generated keys in the selected format.
         """
-        if self.args.output:
-            with open(self.args.output, "w", encoding="utf-8") as f:
-                f.write("\n".join(self.lines) + "\n")
+
+        output_format = self.args.format
+
+        if output_format == "text":
+            data = "\n".join(self.lines) + "\n"
+
+        elif output_format == "json":
+            data = json.dumps(
+                {
+                    "keys": self.lines
+                },
+                indent=2
+            ) + "\n"
+
+        elif output_format == "csv":
+            import io
+
+            buffer = io.StringIO()
+            writer = csv.writer(buffer)
+
+            writer.writerow(["key"])
+
+            for key in self.lines:
+                writer.writerow([key])
+
+            data = buffer.getvalue()
+
+        elif output_format == "xml":
+            root = ET.Element("zora")
+
+            keys = ET.SubElement(root, "keys")
+
+            for key in self.lines:
+                element = ET.SubElement(keys, "key")
+                element.text = key
+
+            data = ET.tostring(root, encoding="unicode") + "\n"
+
+        elif output_format == "yml":
+            if yaml is None:
+                self.parser.error(
+                    "YAML output requires PyYAML. "
+                    "Install it with: pip install pyyaml"
+                )
+
+            data = yaml.safe_dump(
+                {
+                    "keys": self.lines,
+                },
+                sort_keys=False
+            )
 
         else:
-            print("\n".join(self.lines))
+            self.parser.error(f"unsupported output format: {output_format}")
+
+        if self.args.output:
+            with open(self.args.output, "w", encoding="utf-8", newline="") as f:
+                f.write(data)
+        else:
+            print(data, end="")
 
     def start_timer(self):
         """
