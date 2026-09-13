@@ -10,7 +10,7 @@ from . import __version__
 
 PYPI_URL = "https://pypi.org/pypi/zora-cli/json"
 
-CHECK_INTERVAL = 60 * 60 * 24  # 24 hours
+CHECK_INTERVAL = 60 * 60 * 2  # 2 hours
 
 
 def _cache_file():
