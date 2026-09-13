@@ -103,21 +103,21 @@ class Zora:
         charset = ""
 
         while value:
-            if value.startswith("@"):
+            if value.startswith("@@"):
+                charset += "@"
+                value = value[2:]
+            elif value.startswith("@"):
                 value = value[1:]
-
                 matches = [
                     name for name in CHARSETS
                     if value.startswith(name)
                 ]
-
                 if not matches:
                     self.parser.error(f"unknown charset preset near: @{value}")
 
                 name = max(matches, key=len)
                 charset += CHARSETS[name]
                 value = value[len(name):]
-
             else:
                 charset += value[0]
                 value = value[1:]
@@ -301,8 +301,6 @@ class Zora:
         """
         Stops the timer and prints elapsed time
         """
-        if self.args.quiet:
-            return
 
         if not hasattr(self, "time_start"):
             print("Timer has not been started properly.")
