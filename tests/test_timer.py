@@ -68,11 +68,11 @@ def test_show_timer_displays_seconds(monkeypatch, capsys):
 def test_show_timer_displays_minutes(monkeypatch, capsys):
     zora = make_zora()
 
-    zora.start_timer()
+    zora.time_start = 1000.0
 
     monkeypatch.setattr(
         "zora.cli.time.perf_counter",
-        lambda: zora.time_start + 65,
+        lambda: 1065.0,
     )
 
     zora.show_timer()
@@ -81,15 +81,14 @@ def test_show_timer_displays_minutes(monkeypatch, capsys):
 
     assert "1m 5s elapsed" in output
 
-
 def test_show_timer_displays_hours(monkeypatch, capsys):
     zora = make_zora()
 
-    zora.start_timer()
+    zora.time_start = 1000.0
 
     monkeypatch.setattr(
         "zora.cli.time.perf_counter",
-        lambda: zora.time_start + 3665,
+        lambda: 4665.0,
     )
 
     zora.show_timer()
@@ -97,7 +96,6 @@ def test_show_timer_displays_hours(monkeypatch, capsys):
     output = capsys.readouterr().out
 
     assert "1h 1m 5s elapsed" in output
-
 
 def test_show_timer_quiet_suppresses_output(capsys):
     zora = make_zora(quiet=True)
