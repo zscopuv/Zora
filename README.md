@@ -165,6 +165,8 @@ to display all available presets.
 
 ## Basic
 
+> `@@` → literal `@`
+
 | Preset     | Characters              |
 | ---------- | ----------------------- |
 | `@digits`  | `0-9`                   |
