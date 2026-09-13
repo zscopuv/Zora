@@ -1,5 +1,5 @@
 # ![Logo](zora.jpg)
-> **Early release (`v0.1.1`)**
+> **Early release (`v0.1.2`)**
 
 Zora generates random keys using Python's cryptographically secure
 `secrets` module by default. It supports customizable character sets,
