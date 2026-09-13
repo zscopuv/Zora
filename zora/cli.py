@@ -14,14 +14,46 @@ def positive_int(value):
     return value
 
 CHARSETS = {
+    # Basic
     "digits": string.digits,
     "letters": string.ascii_letters,
     "lower": string.ascii_lowercase,
     "upper": string.ascii_uppercase,
-    "hex": string.hexdigits,
-    "oct": string.octdigits,
-    "bin": "01",
     "special": string.punctuation,
+
+    # Numeric
+    "bin": "01",
+    "oct": "01234567",
+    "hex": "0123456789ABCDEF",
+    "lhex": "0123456789abcdef",
+    "allhex": "0123456789ABCDEFabcdef",
+
+    # URL / filename friendly
+    "url": string.ascii_letters + string.digits + "-._~",
+    "urlsafe": string.ascii_letters + string.digits + "-_",
+    "filename": string.ascii_letters + string.digits + "-_.",
+
+    # Human-friendly
+    "lowerx": "abcdefghijkmnopqrstuvwxyz",  # lower without "l" which can be misread as I/1
+    "upperx": "ABCDEFGHJKLMNPQRSTUVWXYZ",   # upper without "I", "O" which can be misread as l/1, 0
+    "digits-safe": "23456789",              # digits without "0", "1" which can be misread as O, I/l
+
+    # Base encodings
+    "base32": "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+    "lbase32": "abcdefghijklmnopqrstuvwxyz234567",
+    "base36": "0123456789abcdefghijklmnopqrstuvwxyz",
+    "ubase36": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "base62": string.digits + string.ascii_letters,
+
+    # Base64 alphabets
+    "base64": string.ascii_letters + string.digits + "+/",
+    "base64url": string.ascii_letters + string.digits + "-_",
+
+    # Common symbols
+    "symbols": string.punctuation,
+    "brackets": "()[]{}<>",
+    "quotes": "\"'`",
+    "math": "+-=*/%<>^~|&",
 }
 
 class Zora:
@@ -107,7 +139,6 @@ class Zora:
         sc("--unsafe", action="store_true", help="Use PRNG instead of CSPRNG for generation")
         sc("-q", "--quiet", action="store_true", help="Suppress non-essential output")
 
-
         sc("-x", "--charset", default="@letters", help="Character set to use (see --charset-list)")
 
         self.args = self.parser.parse_args()
@@ -120,8 +151,19 @@ class Zora:
             self.parser.error("--seed requires --unsafe (seeding is insecure)")
 
         if self.args.charset_list:
-            self.parser.exit(0, ("\nAvailable charsets to use:\n  @"+("\n  @".join(CHARSETS.keys())) + f"\n\n Use as:\n  zora --charset @digits            = For digits only charset\n  zora --charset @letters@digits    = For alphanumeric charset\n  zora --charset @hex\"XYZ\"          = For hexadecimal charset extended with letters X, Y and Z\n"))
+            lines = ["\nAvailable charsets to use:"]
 
+            for name, chars in CHARSETS.items():
+                lines.append(f"  @{name:<12} = {chars}")
+
+            lines.append(
+                "\nUse as:"
+                "\n  zora --charset @digits"
+                "\n  zora --charset @letters@digits"
+                "\n  zora --charset @hexXYZ"
+            )
+
+            self.parser.exit(0, "\n".join(lines) + "\n")
         if self.args.unsafe and not self.args.quiet:
             print(f"{Fore.RED}Program will output cryptographically insecure keys.\n")
 
