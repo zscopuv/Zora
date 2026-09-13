@@ -126,7 +126,7 @@ class Zora:
         Parses all the arguments
         """
         self.parser = argparse.ArgumentParser(
-            description="Generate random AUTH keys."
+            description="Cryptographically secure generator of random keys with tons of options and customizations."
         )
 
         sc = self.parser.add_argument
