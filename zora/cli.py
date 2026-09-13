@@ -156,7 +156,7 @@ class Zora:
 
     def validate_args(self):
         """Validate parsed command-line arguments."""
-        if self.args.length is None and (not self.args.charset_list or self.args.version):
+        if self.args.length is None and not self.args.charset_list:
             self.parser.error("length is required")
 
         if self.args.seed is not None and not self.args.unsafe:
@@ -220,7 +220,7 @@ class Zora:
                 f.write("\n".join(self.lines) + "\n")
 
         else:
-            print("\n".join(_ for _ in self.lines))
+            print("\n".join(self.lines))
 
     def start_timer(self):
         """
