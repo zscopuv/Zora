@@ -74,6 +74,8 @@ class Zora:
         self.parse_args()
         self.validate_args()
         self.build_charset()
+        if self.args.benchmark:
+            self.calculate_benchmark()
         self.validate_charset()
         self.generate_keys()
         self.output()
@@ -145,6 +147,7 @@ class Zora:
         #
         sc("--charset-list", action="store_true", help="Shows available charset lists")
         sc("--version", action="version", version=f"%(prog)s {__version__}")
+        sc("--benchmark", action="store_true", help="Benchmark key generation")
 
         sc("length", type=positive_int, help="Length of the key", nargs="?")
         sc("--seed", type=str, help="Seed for generation")
@@ -360,6 +363,54 @@ class Zora:
         else:
             return Fore.GREEN + "Very strong"
 
+    def calculate_benchmark(self):
+        """
+        Benchmark key generation using the current CLI arguments.
+        Does not produce normal key output.
+        """
+
+        chooser = random.choice if self.args.unsafe else secrets.choice
+
+        # Respect --seed for reproducible PRNG benchmarks.
+        if self.args.seed is not None:
+            random.seed(self.args.seed)
+
+        start = time.perf_counter()
+
+        for _ in range(self.args.count):
+            for _ in range(self.args.length):
+                chooser(self.charset)
+
+        elapsed = time.perf_counter() - start
+
+        total_keys = self.args.count
+        total_characters = total_keys * self.args.length
+
+        keys_per_second = (
+            total_keys / elapsed
+            if elapsed > 0
+            else 0
+        )
+
+        characters_per_second = (
+            total_characters / elapsed
+            if elapsed > 0
+            else 0
+        )
+
+        generator = "PRNG" if self.args.unsafe else "CSPRNG"
+
+        print(f"{Fore.LIGHTYELLOW_EX}Zora Benchmark")
+        print(f"{Fore.WHITE}{'─' * 32}")
+        print(f"{Fore.CYAN}Generator: {generator}")
+        print(f"{Fore.CYAN}Length: {self.args.length}")
+        print(f"{Fore.CYAN}Count: {self.args.count}")
+        print(f"{Fore.CYAN}Charset: {len(self.charset)}")
+        print(f"{Fore.CYAN}Characters: {total_characters}")
+        print(f"{Fore.CYAN}Time: {elapsed:.6f}s")
+        print(f"{Fore.GREEN}Keys/sec: {keys_per_second:,.2f}")
+        print(f"{Fore.GREEN}Characters/sec: {characters_per_second:,.2f}")
+        self.parser.exit(0)
 
 def main():
     zora = Zora()
