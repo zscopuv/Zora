@@ -722,8 +722,8 @@ Possible future improvements include:
 * [x] Improved documentation
 * [x] Installation through `pip`
 * [x] Packaging with `pyproject.toml`
+* [x] Better charset parsing errors
 * [ ] Automated test suite
-* [ ] Better charset parsing errors
 * [ ] Configuration files
 * [ ] Shell completion
 * [ ] More output formats
