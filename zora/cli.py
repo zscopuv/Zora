@@ -63,6 +63,7 @@ class Zora:
     def run(self):
         self.start_timer()
         self.parse_args()
+        self.validate_args()
         self.build_charset()
         self.validate_charset()
         self.generate_keys()
@@ -152,12 +153,17 @@ class Zora:
 
         self.args = self.parser.parse_args()
 
+    def validate_args(self):
+        """Validate parsed command-line arguments."""
         if self.args.length is None and not self.args.charset_list:
             self.parser.error("length is required")
 
-        # RANDOM MODULE DISALLOWED + SEED SET
         if self.args.seed is not None and not self.args.unsafe:
             self.parser.error("--seed requires --unsafe (seeding is insecure)")
+
+        if self.args.group is not None:
+            if self.args.length is not None and self.args.group > self.args.length:
+                self.parser.error("--group cannot be greater than length")
 
         if self.args.charset_list:
             lines = ["\nAvailable charsets to use:"]
@@ -175,6 +181,7 @@ class Zora:
             self.parser.exit(0, "\n".join(lines) + "\n")
         if self.args.unsafe and not self.args.quiet:
             print(f"{Fore.RED}Program will output cryptographically insecure keys.\n")
+
 
     def format_key(self, key):
         if self.args.group is not None:
