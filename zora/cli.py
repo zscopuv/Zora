@@ -194,7 +194,7 @@ class Zora:
 
             self.parser.exit(0, "\n".join(lines) + "\n")
 
-        if self.args.unsafe and not self.args.quiet:
+        if self.args.unsafe and not (self.args.quiet or self.args.benchmark):
             print(f"{Fore.RED}Program will output cryptographically insecure keys.\n")
 
 
@@ -308,9 +308,9 @@ class Zora:
             print("Timer has not been started properly.")
             return
 
-        elapsed = time.perf_counter() - self.time_start
+        self.elapsed = time.perf_counter() - self.time_start
 
-        total_ms = int(elapsed * 1000)
+        total_ms = int(self.elapsed * 1000)
         total_seconds = total_ms // 1000
 
         if total_ms < ms_threshold:
@@ -375,41 +375,41 @@ class Zora:
         if self.args.seed is not None:
             random.seed(self.args.seed)
 
-        start = time.perf_counter()
 
         for _ in range(self.args.count):
             for _ in range(self.args.length):
                 chooser(self.charset)
 
-        elapsed = time.perf_counter() - start
-
         total_keys = self.args.count
         total_characters = total_keys * self.args.length
 
+        self.show_timer()
+
         keys_per_second = (
-            total_keys / elapsed
-            if elapsed > 0
+            total_keys / self.elapsed
+            if self.elapsed > 0
             else 0
         )
 
         characters_per_second = (
-            total_characters / elapsed
-            if elapsed > 0
+            total_characters / self.elapsed
+            if self.elapsed > 0
             else 0
         )
 
-        generator = "PRNG" if self.args.unsafe else "CSPRNG"
+        print(self.elapsed)
 
-        print(f"{Fore.LIGHTYELLOW_EX}Zora Benchmark")
+        generator = f"{Fore.RED}PRNG" if self.args.unsafe else f"{Fore.GREEN}CSPRNG"
+
+        print(f"\n{Fore.CYAN}Zora Benchmark")
         print(f"{Fore.WHITE}{'─' * 32}")
-        print(f"{Fore.CYAN}Generator: {generator}")
-        print(f"{Fore.CYAN}Length: {self.args.length}")
-        print(f"{Fore.CYAN}Count: {self.args.count}")
-        print(f"{Fore.CYAN}Charset: {len(self.charset)}")
+        print(f"{Fore.LIGHTBLUE_EX}Generator: {generator}")
+        print(f"{Fore.LIGHTBLUE_EX}Length: {self.args.length}")
+        print(f"{Fore.LIGHTCYAN_EX}Count: {self.args.count}")
+        print(f"{Fore.LIGHTCYAN_EX}Charset: {len(self.charset)}")
         print(f"{Fore.CYAN}Characters: {total_characters}")
-        print(f"{Fore.CYAN}Time: {elapsed:.6f}s")
-        print(f"{Fore.GREEN}Keys/sec: {keys_per_second:,.2f}")
-        print(f"{Fore.GREEN}Characters/sec: {characters_per_second:,.2f}")
+        print(f"{Fore.CYAN}Keys/sec: {keys_per_second:,.2f}")
+        print(f"{Fore.BLUE}Characters/sec: {characters_per_second:,.2f}")
         self.parser.exit(0)
 
 def main():
