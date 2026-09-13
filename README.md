@@ -1,4 +1,4 @@
-# ![Logo](zora.jpg)
+# ![Logo](https://i.ibb.co/21JfnbBZ/zora.jpg)
 > **Early release (`v0.1.3`)**
 
 Zora generates random keys using Python's cryptographically secure
