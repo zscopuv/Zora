@@ -176,29 +176,31 @@ class Zora:
         if self.args.unsafe and not self.args.quiet:
             print(f"{Fore.RED}Program will output cryptographically insecure keys.\n")
 
+    def format_key(self, key):
+        if self.args.group is not None:
+            key = self.args.sep.join(
+                key[i:i + self.args.group]
+                for i in range(0, len(key), self.args.group)
+            )
+
+        return f"{self.args.prefix}{key}{self.args.suffix}"
+
     def generate_keys(self):
         """
         Generates all the keys
         """
         def gen():
-            if self.args.unsafe:
-                return "".join(random.choice(self.charset) for _ in range(self.args.length))
-            else:
-                return "".join(secrets.choice(self.charset) for _ in range(self.args.length))
+            chooser = random.choice if self.args.unsafe else secrets.choice
+            return "".join(
+                chooser(self.charset)
+                for _ in range(self.args.length)
+            )
 
         if self.args.seed is not None:
             random.seed(self.args.seed)
-                 
+
         for _ in range(self.args.count):
-            key = gen()
-            if self.args.group is not None:
-                key = self.args.sep.join(
-                    key[i:i + self.args.group]
-                    for i in range(0, len(key), self.args.group)
-                )
-            self.lines.append(
-                f"{self.args.prefix}{key}{self.args.suffix}"
-            )
+            self.lines.append(self.format_key(gen()))
 
     def output(self):
         """
