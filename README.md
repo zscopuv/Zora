@@ -1,11 +1,13 @@
 # ![Logo](https://i.ibb.co/21JfnbBZ/zora.jpg)
+
 > **Early release (`v0.2`)**
 
-Zora generates random keys using Python's cryptographically secure
-`secrets` module by default. It supports customizable character sets,
-charset presets, prefixes, suffixes, grouping, multiple outputs, file
-output, entropy estimation, and an optional deterministic PRNG mode.
+Zora is a command-line tool for generating random keys using Python's
+cryptographically secure `secrets` module by default.
 
+It supports customizable character sets, composable charset presets,
+prefixes, suffixes, grouping, multiple output formats, file output,
+entropy estimation, benchmarking, and an optional deterministic PRNG mode.
 
 ---
 
@@ -16,22 +18,33 @@ output, entropy estimation, and an optional deterministic PRNG mode.
 - 🎲 **Deterministic generation** with `--seed` in unsafe mode
 - 🔤 **Custom character sets**
 - 🧩 **Composable charset presets** such as `@letters@digits`
-- 🔢 **Built-in hexadecimal, octal, binary, digit, and symbol presets**
+- ⚡ **Fast charset shorthand** with `-x`
+- 🔢 **28 built-in charset presets**
 - ➕ Add **custom characters** to presets
 - 📏 Configurable **key length**
 - 📦 Generate **multiple keys** at once
 - 🔗 Add **prefixes and suffixes**
 - 📐 **Group keys with custom separators**
 - 💾 Write generated **keys to a file**
+- 📤 Multiple output formats: **Text, JSON, CSV, XML, YAML**
 - 📊 Calculate **theoretical entropy**
 - 💪 **Estimate key strength** from entropy
 - ⏱️ Display **generation time**
+- 🏁 **Benchmark key generation**
 - 🤫 **Quiet mode** for scripting
 - 📋 **Charset preset listing**
+- 🔍 **Charset and argument validation**
+- ℹ️ Display the installed version with `--version`
 
-## Installation
+---
 
-### Requirements
+# Installation
+
+## Requirements
+
+Python 3.9 or newer is recommended.
+
+Install Zora from PyPI:
 
 ```bash
 pip install zora-cli
@@ -42,6 +55,16 @@ Run Zora:
 ```bash
 zora 32
 ```
+
+### Optional YAML support
+
+YAML output requires PyYAML:
+
+```bash
+pip install pyyaml
+```
+
+---
 
 # Usage
 
@@ -63,6 +86,7 @@ Example output:
 GxKqTnJpYwRzLhBcVfQmNsXeUaPkTdWr
 
 Timer: 13ms elapsed
+
 Charset: 52
 Entropy: 182.41 bits
 Strength: Very strong
@@ -85,44 +109,123 @@ The value must be greater than `0`.
 
 ---
 
-## `--charset`
+## `--version`
+
+Display the currently installed Zora version:
+
+```bash
+zora --version
+```
+
+Example:
+
+```text
+zora 0.2.0
+```
+
+---
+
+## `--charset` / `-x`
 
 Select the character set used to generate keys.
 
-```bash
-zora 32 --charset @digits
-```
-
-By default:
+The default charset is:
 
 ```text
 @letters
 ```
 
-is used.
+Long form:
+
+```bash
+zora 32 --charset @digits
+```
+
+Short form:
+
+```bash
+zora 32 -x @digits
+```
+
+The `-x` option is provided as a convenient shorthand for faster charset selection.
 
 Zora supports both predefined charset presets and literal characters.
 
-### Presets
+---
 
-Use `--charset-list` to display all available presets:
+## Charset presets
+
+Use:
 
 ```bash
 zora --charset-list
 ```
 
-Currently available presets:
+to display all available presets.
 
-| Preset     | Characters                    |
-| ---------- | ----------------------------- |
-| `@digits`  | `0-9`                  |
-| `@letters` | `a-zA-Z`                      |
-| `@lower`   | `a-z`                         |
-| `@upper`   | `A-Z`                         |
-| `@hex`     | `0-9ABCDEFabcdef`        |
-| `@oct`     | `01234567`              |
-| `@bin`     | `01`                          |
-| `@special` | all punctuation/symbol characters |
+## Basic
+
+| Preset     | Characters              |
+| ---------- | ----------------------- |
+| `@digits`  | `0-9`                   |
+| `@letters` | `a-zA-Z`                |
+| `@lower`   | `a-z`                   |
+| `@upper`   | `A-Z`                   |
+| `@special` | Punctuation and symbols |
+
+## Numeric
+
+| Preset    | Characters               |
+| --------- | ------------------------ |
+| `@bin`    | `01`                     |
+| `@oct`    | `01234567`               |
+| `@hex`    | `0123456789ABCDEF`       |
+| `@lhex`   | `0123456789abcdef`       |
+| `@allhex` | `0123456789ABCDEFabcdef` |
+
+## URL / filename friendly
+
+| Preset      | Characters                       |
+| ----------- | -------------------------------- |
+| `@url`      | URL-friendly characters          |
+| `@urlsafe`  | URL-safe alphanumeric characters |
+| `@filename` | Filename-safe characters         |
+
+## Human-friendly
+
+These presets avoid characters that can easily be confused with one another.
+
+| Preset        | Description                   |
+| ------------- | ----------------------------- |
+| `@lowersafe`     | Lowercase without `l`         |
+| `@uppersafe`     | Uppercase without `I` and `O` |
+| `@digitssafe` | Digits without `0` and `1`    |
+
+## Base encodings
+
+| Preset     | Description               |
+| ---------- | ------------------------- |
+| `@base32`  | Uppercase Base32 alphabet |
+| `@base32x` | Lowercase Base32 alphabet |
+| `@base36` | Uppercase Base36 alphabet |
+| `@base36x`  | Lowercase Base36 alphabet |
+| `@base62`  | Base62 alphabet           |
+
+## Base64
+
+| Preset       | Description              |
+| ------------ | ------------------------ |
+| `@base64`    | Standard Base64 alphabet |
+| `@base64url` | URL-safe Base64 alphabet |
+
+## Symbols
+
+| Preset      | Characters                  |
+| ----------- | --------------------------- |
+| `@symbols`  | Punctuation and symbols     |
+| `@brackets` | `()[]{}<>`                  |
+| `@quotes`   | Quote characters            |
+| `@math`     | Common mathematical symbols |
 
 ---
 
@@ -136,7 +239,7 @@ zora 32 --charset @letters@digits
 
 This creates an alphanumeric character set.
 
-Multiple presets can be combined:
+Multiple presets can also be combined:
 
 ```bash
 zora 32 --charset @upper@lower@digits
@@ -151,6 +254,12 @@ For example:
 ```
 
 does not contain uppercase characters twice.
+
+The short `-x` form can be used as well:
+
+```bash
+zora 32 -x @upper@lower@digits
+```
 
 ---
 
@@ -182,44 +291,43 @@ means:
 X + Y + Z + @hex
 ```
 
-This allows arbitrary character sets without needing to add a new preset.
+This allows arbitrary character sets without requiring a new preset.
 
 ---
 
-# `--charset-list`
+## `--charset-list`
 
-Display the available charset presets:
+Display all available charset presets:
 
 ```bash
 zora --charset-list
 ```
 
+The output includes the preset name and its characters.
+
 Example:
 
 ```text
 Available charsets:
-
-  @digits
-  @letters
-  @lower
-  @upper
-  @hex
-  @oct
-  @bin
-  @special
+  @digits       = 0123456789
+  @letters      = abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+  @lower        = abcdefghijklmnopqrstuvwxyz
+  @upper        = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  ...
 
 Use as:
-
   zora --charset @digits
   zora --charset @letters@digits
   zora --charset @hexXYZ
 ```
 
+This mode exits immediately after displaying the available presets.
+
 ---
 
 # Multiple keys
 
-Use `-n` or `--count`:
+Use `-n` or `--count` to generate multiple keys:
 
 ```bash
 zora 32 --count 10
@@ -231,7 +339,7 @@ or:
 zora 32 -n 10
 ```
 
-Zora generates each key independently.
+Each key is generated independently.
 
 When using the secure default generator, each key is generated using the
 cryptographically secure random generator.
@@ -308,23 +416,95 @@ entropy.
 
 ---
 
+# Output formats
+
+Zora supports multiple output formats through `--format`.
+
+Available formats:
+
+* `text`
+* `json`
+* `csv`
+* `xml`
+* `yml`
+
+The default format is `text`.
+
+## Text
+
+```bash
+zora 32 --format text
+```
+
+This is the default output format.
+
+## JSON
+
+```bash
+zora 32 -n 3 --format json
+```
+
+Example:
+
+```json
+{
+  "keys": [
+    "GxKqTnJpYwRzLhBcVfQmNsXeUaPkTdWr",
+    "...",
+    "..."
+  ]
+}
+```
+
+## CSV
+
+```bash
+zora 32 -n 3 --format csv
+```
+
+The generated CSV contains a `key` column.
+
+## XML
+
+```bash
+zora 32 -n 3 --format xml
+```
+
+## YAML
+
+```bash
+zora 32 -n 3 --format yml
+```
+
+YAML output requires PyYAML:
+
+```bash
+pip install pyyaml
+```
+
+---
+
 # File output
 
-Use `-o` or `--output` to write generated keys to a file:
+Use `-o` or `--output` to write generated output to a file:
 
 ```bash
 zora 32 -n 10 --output keys.txt
 ```
 
-The generated keys are written one per line.
+The output format can be selected independently:
 
-Example:
-
-```text
-GxKqTnJpYwRzLhBcVfQmNsXeUaPkTdWr
-aQmXzPjLtVrNsYkBcWdHgFqAeUxRoZiLp
-...
+```bash
+zora 32 -n 10 --format json -o keys.json
 ```
+
+```bash
+zora 32 -n 10 --format csv -o keys.csv
+```
+
+Generated files use UTF-8 encoding.
+
+Text-based CLI output uses a conventional final newline.
 
 ---
 
@@ -415,6 +595,45 @@ rather than being reseeded for every key.
 
 ---
 
+# Benchmarking
+
+Use `--benchmark` to benchmark key generation:
+
+```bash
+zora 32 --benchmark
+```
+
+The benchmark reports:
+
+* Generator
+* Key length
+* Number of keys
+* Charset size
+* Total characters generated
+* Keys per second
+* Characters per second
+
+Example:
+
+```text
+Zora Benchmark
+────────────────────────────────
+Generator: CSPRNG
+Length: 32
+Count: 1
+Charset: 52
+Characters: 32
+Keys/sec: ...
+Characters/sec: ...
+```
+
+Benchmarking does not produce normal key output.
+
+The benchmark respects `--unsafe`, `--seed`, `--count`, and the selected
+charset.
+
+---
+
 # Quiet mode
 
 Use `-q` or `--quiet` to suppress non-essential output:
@@ -431,25 +650,31 @@ For example:
 zora 32 --quiet > key.txt
 ```
 
+Quiet mode suppresses the timer, entropy, strength, generator information,
+and update notification.
+
 ---
 
 # Entropy
 
-Zora calculates the theoretical entropy of the random portion of the
-key.
+Zora calculates the theoretical entropy of the random portion of the key.
 
 The formula is:
 
-$entropy = length \times \log{_2}{(charset size)}$
+```text
+entropy = length × log₂(charset size)
+```
 
 For example, using 52 possible characters:
 
-$32 \times log{_2}\space 52$
+```text
+32 × log₂(52)
+```
 
 produces approximately:
 
 ```text
-182.17 bits
+182.41 bits
 ```
 
 The entropy calculation only considers random characters.
@@ -504,6 +729,25 @@ PRNG
 
 ---
 
+# Argument validation
+
+Zora validates command-line arguments before generating keys.
+
+Examples of invalid arguments include:
+
+* A key length of `0` or less
+* A key length missing when generation is requested
+* A `--group` value greater than the key length
+* Using `--seed` without `--unsafe`
+* An unknown charset preset
+* An empty final charset
+* A charset containing fewer than two unique characters
+
+Invalid arguments result in a clear command-line error instead of
+attempting to generate invalid output.
+
+---
+
 # Example commands
 
 ### Basic key
@@ -515,49 +759,55 @@ zora 32
 ### Digits only
 
 ```bash
-zora 32 --charset @digits
+zora 32 -x @digits
 ```
 
 ### Lowercase only
 
 ```bash
-zora 32 --charset @lower
+zora 32 -x @lower
 ```
 
 ### Uppercase only
 
 ```bash
-zora 32 --charset @upper
+zora 32 -x @upper
 ```
 
 ### Alphanumeric
 
 ```bash
-zora 32 --charset @letters@digits
+zora 32 -x @letters@digits
 ```
 
 ### Hexadecimal
 
 ```bash
-zora 32 --charset @hex
+zora 32 -x @hex
 ```
 
 ### Hexadecimal plus custom characters
 
 ```bash
-zora 32 --charset @hexXYZ
+zora 32 -x @hexXYZ
 ```
 
 ### Uppercase, lowercase and digits
 
 ```bash
-zora 32 --charset @upper@lower@digits
+zora 32 -x @upper@lower@digits
+```
+
+### Human-friendly digits
+
+```bash
+zora 32 -x @digitssafe
 ```
 
 ### Symbols
 
 ```bash
-zora 32 --charset @special
+zora 32 -x @symbols
 ```
 
 ### Group the output
@@ -582,6 +832,30 @@ zora 32 -n 10
 
 ```bash
 zora 32 -n 100 -o keys.txt
+```
+
+### JSON output
+
+```bash
+zora 32 -n 10 --format json
+```
+
+### Benchmark
+
+```bash
+zora 32 --benchmark
+```
+
+### Show available charsets
+
+```bash
+zora --charset-list
+```
+
+### Show version
+
+```bash
+zora --version
 ```
 
 ### Prefix
@@ -665,7 +939,9 @@ random output space.
 For example, a 32-character key selected uniformly from 62 possible
 characters has:
 
-$32 \times log{_2}\space 62$
+```text
+32 × log₂(62)
+```
 
 bits of theoretical entropy.
 
@@ -686,8 +962,8 @@ The generator is nevertheless explicitly marked:
 Generator: PRNG
 ```
 
-and the entropy/strength display is visually marked when `--unsafe` is
-used.
+and the entropy and strength display is visually marked when `--unsafe`
+is used.
 
 ---
 
@@ -712,6 +988,12 @@ Run:
 zora 32
 ```
 
+For YAML output, install PyYAML:
+
+```bash
+pip install pyyaml
+```
+
 ---
 
 # Roadmap
@@ -723,11 +1005,13 @@ Possible future improvements include:
 * [x] Installation through `pip`
 * [x] Packaging with `pyproject.toml`
 * [x] Better charset parsing errors
-* [ ] Automated test suite
+* [x] Multiple output formats
+* [x] Benchmarking mode
+* [x] Version information
+* [x] Argument validation
+* [x] Automated test suite
 * [ ] Configuration files
 * [ ] Shell completion
-* [ ] More output formats
-* [ ] Benchmarking mode
 * [ ] Cross-platform terminal improvements
 * [ ] API/library usage
 * [ ] More extensive security testing
@@ -747,7 +1031,7 @@ MAJOR.MINOR.PATCH
 For example:
 
 ```text
-v0.1.0
+v0.2.0
 ```
 
 The `0.x` versions indicate that the CLI and features may still change

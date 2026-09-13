@@ -43,15 +43,15 @@ CHARSETS = {
     "filename": string.ascii_letters + string.digits + "-_.",
 
     # Human-friendly
-    "lowerx": "abcdefghijkmnopqrstuvwxyz",  # lower without "l" which can be misread as I/1
-    "upperx": "ABCDEFGHJKLMNPQRSTUVWXYZ",   # upper without "I", "O" which can be misread as l/1, 0
+    "lowersafe": "abcdefghijkmnopqrstuvwxyz",  # lower without "l" which can be misread as I/1
+    "uppersafe": "ABCDEFGHJKLMNPQRSTUVWXYZ",   # upper without "I", "O" which can be misread as l/1, 0
     "digitssafe": "23456789",              # digits without "0", "1" which can be misread as O, I/l
 
     # Base encodings
     "base32": "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
-    "lbase32": "abcdefghijklmnopqrstuvwxyz234567",
-    "base36": "0123456789abcdefghijklmnopqrstuvwxyz",
-    "ubase36": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "base32x": "abcdefghijklmnopqrstuvwxyz234567",
+    "base36": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "base36x": "0123456789abcdefghijklmnopqrstuvwxyz",
     "base62": string.digits + string.ascii_letters,
 
     # Base64 alphabets
