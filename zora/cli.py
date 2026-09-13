@@ -36,7 +36,7 @@ CHARSETS = {
     # Human-friendly
     "lowerx": "abcdefghijkmnopqrstuvwxyz",  # lower without "l" which can be misread as I/1
     "upperx": "ABCDEFGHJKLMNPQRSTUVWXYZ",   # upper without "I", "O" which can be misread as l/1, 0
-    "digits-safe": "23456789",              # digits without "0", "1" which can be misread as O, I/l
+    "digitssafe": "23456789",              # digits without "0", "1" which can be misread as O, I/l
 
     # Base encodings
     "base32": "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
