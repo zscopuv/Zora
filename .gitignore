@@ -3,3 +3,4 @@
 /test-env
 /zora_cli*
 /.vscode
+*/__pycache__
